@@ -4,3 +4,6 @@ Thumbs.db
 
 # Hero video is too large for GitHub (>100MB). Host separately or compress before committing.
 video/
+
+# Local Netlify folder
+.netlify
