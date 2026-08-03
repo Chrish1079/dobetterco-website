@@ -1,0 +1,6 @@
+.DS_Store
+Thumbs.db
+*.log
+
+# Hero video is too large for GitHub (>100MB). Host separately or compress before committing.
+video/
