@@ -5,7 +5,8 @@
 [build.processing.html]
   ignore_html_forms = false
 
-[[headers]]  for = "/*"
+[[headers]]
+  for = "/*"
   [headers.values]
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
