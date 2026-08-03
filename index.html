@@ -167,7 +167,20 @@
           <h2>Stay in the loop</h2>
           <p>New drops, restocks, and behind-the-scenes — no spam.</p>
         </div>
-        <form class="signup" action="#" method="post">
+        <form
+          class="signup"
+          name="email-signup"
+          method="POST"
+          data-netlify="true"
+          netlify-honeypot="bot-field"
+        >
+          <input type="hidden" name="form-name" value="email-signup" />
+          <p class="sr-only" aria-hidden="true">
+            <label>
+              Don't fill this out:
+              <input name="bot-field" tabindex="-1" autocomplete="off" />
+            </label>
+          </p>
           <label class="sr-only" for="email">Email address</label>
           <input
             id="email"
