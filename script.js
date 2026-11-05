@@ -81,7 +81,7 @@ form?.addEventListener("submit", async (event) => {
 });
 
 const revealItems = document.querySelectorAll(
-  ".section-head, .product, .story__copy, .story__media, .signup"
+  ".section-head, .product, .story__inner, .signup"
 );
 
 revealItems.forEach((el) => el.classList.add("reveal"));

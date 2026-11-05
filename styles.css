@@ -370,7 +370,7 @@ h3,
 }
 
 .section-head h2,
-.story__copy h2,
+.story__header h2,
 .contact h2 {
   margin: 0 0 0.65rem;
   font-size: clamp(2rem, 5vw, 3.4rem);
@@ -516,55 +516,100 @@ h3,
 
 /* Story */
 .story {
-  display: grid;
-  grid-template-columns: 1fr;
-  min-height: 70svh;
-  background: var(--ink);
+  background:
+    radial-gradient(900px 420px at 15% 0%, rgba(31, 111, 235, 0.14), transparent 55%),
+    var(--ink);
   color: #f4f2ec;
+  padding: clamp(4rem, 10vw, 7rem) var(--space);
 }
 
-.story__media {
-  min-height: 42svh;
-  overflow: hidden;
+.story__inner {
+  width: min(100%, 42rem);
+  margin-inline: auto;
 }
 
-.story__media img {
+.story__header {
+  text-align: center;
+  margin-bottom: clamp(2rem, 5vw, 3rem);
+}
+
+.story__mark {
+  width: min(7.5rem, 28vw);
+  margin: 0 auto 1.25rem;
+  padding: 0.65rem;
+  border-radius: 0.35rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.story__mark img {
+  display: block;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: saturate(0.85) contrast(1.05);
+  height: auto;
+  object-fit: contain;
+  filter: saturate(0.95) contrast(1.02);
 }
 
-.story__copy {
-  display: grid;
-  align-content: center;
-  padding: clamp(2.5rem, 7vw, 5rem) var(--space);
-}
-
-.story__copy h2 {
+.story__header h2 {
+  margin: 0 0 0.85rem;
   color: #fff;
+  font-size: clamp(2rem, 5vw, 3rem);
 }
 
-.story__copy p {
-  margin: 0 0 1.25rem;
-  max-width: none;
-  color: #fff;
+.story__intro {
+  margin: 0 auto;
+  max-width: 36ch;
+  color: rgba(244, 242, 236, 0.88);
   font-size: 1.05rem;
+  font-weight: 300;
+  line-height: 1.6;
+}
+
+.story__body p {
+  margin: 0 0 1.25rem;
+  color: rgba(244, 242, 236, 0.92);
+  font-size: 1.05rem;
+  font-weight: 300;
+  line-height: 1.65;
+}
+
+.story__quote {
+  margin: 0 0 1.5rem;
+  padding: 1rem 0 1rem 1.15rem;
+  border-left: 3px solid var(--signal);
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 3.5vw, 1.75rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: #fff;
+}
+
+.story__closing {
+  margin-top: clamp(2rem, 5vw, 2.75rem);
+  padding-top: 1.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.story__closing p {
+  margin: 0 0 0.45rem;
+  color: rgba(244, 242, 236, 0.9);
+  font-size: 1rem;
   font-weight: 300;
 }
 
-.story__copy p:last-child {
-  margin-bottom: 0;
+.story__closing-lead {
+  margin-top: 1rem !important;
+  color: rgba(244, 242, 236, 0.75) !important;
 }
 
-@media (min-width: 900px) {
-  .story {
-    grid-template-columns: 1.15fr 1fr;
-  }
-
-  .story__media {
-    min-height: 100%;
-  }
+.story__closing-em {
+  margin: 0.35rem 0 0 !important;
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 3vw, 1.5rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #fff !important;
 }
 
 /* Contact */
