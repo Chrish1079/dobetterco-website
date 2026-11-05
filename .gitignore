@@ -8,3 +8,6 @@ video/hero-source.mp4
 
 # Local Netlify folder
 .netlify
+
+# Agent skills (local Stripe/docs tooling)
+.agents/

@@ -1,3 +1,24 @@
+/**
+ * Live Stripe Payment Link URLs (Dashboard → Payment links).
+ * Paste each buy.stripe.com/... URL after creating the link for that product.
+ */
+const stripePaymentLinks = {
+  "mens-classic-tee": "https://buy.stripe.com/bJe28qbdS1t755u1vhbV600",
+  "trucker-hat": "https://buy.stripe.com/eVq4gygyc2xbeG4b5RbV601",
+  "womens-classic-tee": "https://buy.stripe.com/28E5kC5Ty9ZD41qc9VbV602",
+};
+
+document.querySelectorAll("[data-stripe-product]").forEach((productEl) => {
+  const key = productEl.getAttribute("data-stripe-product");
+  const url = key ? stripePaymentLinks[key] : "";
+  if (!url) return;
+  const anchor = productEl.querySelector("a");
+  if (!anchor) return;
+  anchor.href = url;
+  anchor.target = "_blank";
+  anchor.rel = "noopener noreferrer";
+});
+
 const year = document.getElementById("year");
 if (year) year.textContent = String(new Date().getFullYear());
 
