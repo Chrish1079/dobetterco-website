@@ -8,6 +8,10 @@ const stripePaymentLinks = {
   "tee-navy-crest": "",
   "tee-black-crest": "",
   "tee-forest-crest": "",
+  "hat-heather-patch": "",
+  "hat-olive-patch": "",
+  "hat-black-patch": "",
+  "hat-navy-patch": "",
 };
 
 document.querySelectorAll("[data-stripe-product]").forEach((productEl) => {
