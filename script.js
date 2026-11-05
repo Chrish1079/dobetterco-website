@@ -3,9 +3,11 @@
  * Paste each buy.stripe.com/... URL after creating the link for that product.
  */
 const stripePaymentLinks = {
-  "mens-classic-tee": "https://buy.stripe.com/bJe28qbdS1t755u1vhbV600",
-  "trucker-hat": "https://buy.stripe.com/eVq4gygyc2xbeG4b5RbV601",
-  "womens-classic-tee": "https://buy.stripe.com/28E5kC5Ty9ZD41qc9VbV602",
+  "tee-olive-statement": "",
+  "tee-black-statement": "",
+  "tee-navy-crest": "",
+  "tee-black-crest": "",
+  "tee-forest-crest": "",
 };
 
 document.querySelectorAll("[data-stripe-product]").forEach((productEl) => {
