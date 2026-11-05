@@ -236,37 +236,6 @@ h3,
   background: var(--hero-veil);
 }
 
-.hero--release {
-  min-height: clamp(16rem, 52vw, 36rem);
-  align-items: end;
-}
-
-.hero--release .hero__media img {
-  animation: none;
-  transform: none;
-  object-fit: cover;
-  object-position: center center;
-}
-
-.hero--release .hero__veil {
-  background: linear-gradient(
-    180deg,
-    rgba(8, 8, 8, 0.08) 0%,
-    rgba(8, 8, 8, 0.2) 55%,
-    rgba(8, 8, 8, 0.72) 100%
-  );
-}
-
-.hero__content--compact {
-  padding-top: calc(var(--space) + 3rem);
-  padding-bottom: clamp(1.5rem, 4vh, 2.5rem);
-}
-
-.hero__content--compact .cta-group {
-  opacity: 1;
-  animation: rise 0.8s var(--ease) 0.15s forwards;
-}
-
 .hero__content {
   position: relative;
   z-index: 1;
@@ -660,7 +629,6 @@ h3,
 
   .hero__media img,
   .hero__media video,
-  .hero--release .hero__media img,
   .brand,
   .hero h1,
   .lede,
