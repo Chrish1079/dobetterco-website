@@ -236,6 +236,37 @@ h3,
   background: var(--hero-veil);
 }
 
+.hero--banner {
+  min-height: clamp(18rem, 56vw, 40rem);
+  align-items: end;
+}
+
+.hero--banner .hero__media img {
+  animation: none;
+  transform: none;
+  object-fit: cover;
+  object-position: center center;
+}
+
+.hero--banner .hero__veil {
+  background: linear-gradient(
+    180deg,
+    rgba(8, 8, 8, 0.05) 0%,
+    rgba(8, 8, 8, 0.18) 50%,
+    rgba(8, 8, 8, 0.75) 100%
+  );
+}
+
+.hero__content--banner {
+  padding-top: calc(var(--space) + 3rem);
+  padding-bottom: clamp(1.5rem, 4vh, 2.5rem);
+}
+
+.hero__content--banner .cta-group {
+  opacity: 1;
+  animation: rise 0.8s var(--ease) 0.15s forwards;
+}
+
 .hero__content {
   position: relative;
   z-index: 1;
@@ -629,6 +660,7 @@ h3,
 
   .hero__media img,
   .hero__media video,
+  .hero--banner .hero__media img,
   .brand,
   .hero h1,
   .lede,
