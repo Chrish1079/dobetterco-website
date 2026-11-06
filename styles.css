@@ -370,7 +370,6 @@ h3,
 }
 
 .section-head h2,
-.story__header h2,
 .contact h2 {
   margin: 0 0 0.65rem;
   font-size: clamp(2rem, 5vw, 3.4rem);
@@ -523,6 +522,34 @@ h3,
   padding: clamp(4rem, 10vw, 7rem) var(--space);
 }
 
+.story--page {
+  min-height: 100vh;
+  padding-top: clamp(5.5rem, 14vw, 7.5rem);
+}
+
+.story__header h1,
+.story__header h2 {
+  margin: 0 0 0.85rem;
+  color: #fff;
+  font-size: clamp(2rem, 5vw, 3rem);
+}
+
+.story__back {
+  margin: 2rem 0 0 !important;
+  text-align: center;
+}
+
+.btn--on-dark {
+  border-color: rgba(255, 255, 255, 0.35);
+  color: #fff;
+}
+
+.btn--on-dark:hover,
+.btn--on-dark:focus-visible {
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
 .story__inner {
   width: min(100%, 42rem);
   margin-inline: auto;
@@ -548,12 +575,6 @@ h3,
   height: auto;
   object-fit: contain;
   filter: saturate(0.95) contrast(1.02);
-}
-
-.story__header h2 {
-  margin: 0 0 0.85rem;
-  color: #fff;
-  font-size: clamp(2rem, 5vw, 3rem);
 }
 
 .story__intro {
