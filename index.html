@@ -39,21 +39,19 @@
     </div>
 
     <main id="main">
-      <section class="hero hero--banner" id="top" aria-label="Hero">
+      <section class="hero" id="top" aria-label="Hero">
         <div class="hero__media" aria-hidden="true">
-          <img
-            src="images/hero-banner-2x.jpg"
-            srcset="images/hero-banner.jpg 1024w, images/hero-banner-2x.jpg 2048w"
-            sizes="100vw"
-            alt="First Release — Do Better clothing drop"
-            width="2048"
-            height="682"
-            fetchpriority="high"
-            decoding="async"
-          />
+          <video autoplay loop muted playsinline preload="auto">
+            <source src="video/hero.mp4" type="video/mp4" />
+          </video>
         </div>
         <div class="hero__veil" aria-hidden="true"></div>
-        <div class="hero__content hero__content--banner">
+        <div class="hero__content">
+          <p class="brand">DO BETTER CO.</p>
+          <h1>Clothes for the ones who always wanna do better.</h1>
+          <p class="lede">
+            Built on a legacy. Worn with purpose. Inspired by the belief that you can always do better.
+          </p>
           <div class="cta-group">
             <a class="btn btn--primary" href="#collection">Shop the drop</a>
             <a class="btn btn--ghost" href="story.html">Our story</a>
