@@ -680,11 +680,18 @@ h3,
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 0.75rem 1.5rem;
+  align-items: flex-end;
+  gap: 1.25rem 1.5rem;
   padding: 2rem var(--space) 2.5rem;
   border-top: 1px solid var(--line);
   width: min(100%, var(--max));
   margin-inline: auto;
+}
+
+.site-footer__group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
 }
 
 .footer-brand {
@@ -692,10 +699,151 @@ h3,
   font-size: 1rem;
 }
 
+.footer-legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem 1.1rem;
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+.footer-legal a {
+  color: var(--mute);
+  text-decoration: underline;
+  text-decoration-color: rgba(17, 17, 17, 0.2);
+  text-underline-offset: 0.2em;
+  transition: color 0.2s var(--ease);
+}
+
+.footer-legal a:hover,
+.footer-legal a:focus-visible {
+  color: var(--ink);
+}
+
 .footer-meta {
   margin: 0;
   color: var(--mute);
   font-size: 0.9rem;
+}
+
+/* Policy pages */
+body.policy-page .site-header {
+  mix-blend-mode: normal;
+  color: var(--ink);
+  background: rgba(236, 234, 228, 0.9);
+  backdrop-filter: blur(10px);
+}
+
+.policies {
+  padding: clamp(5.5rem, 14vw, 7rem) var(--space) clamp(4rem, 10vw, 6rem);
+}
+
+.policies__inner {
+  width: min(100%, 44rem);
+  margin-inline: auto;
+}
+
+.policies__header {
+  margin-bottom: clamp(2.5rem, 6vw, 3.5rem);
+}
+
+.policies__header h1 {
+  margin: 0 0 0.75rem;
+  font-size: clamp(2rem, 5vw, 3.25rem);
+}
+
+.policies__lede {
+  margin: 0 0 1.35rem;
+  max-width: 42ch;
+  color: var(--mute);
+  font-size: 1.05rem;
+  font-weight: 300;
+  line-height: 1.55;
+}
+
+.policies__toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+}
+
+.policies__toc a {
+  padding: 0.45rem 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.45);
+  transition: background 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+
+.policies__toc a:hover,
+.policies__toc a:focus-visible {
+  border-color: rgba(17, 17, 17, 0.22);
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.policy {
+  margin-bottom: clamp(2.5rem, 6vw, 3.25rem);
+  padding-bottom: clamp(2rem, 5vw, 2.75rem);
+  border-bottom: 1px solid var(--line);
+  scroll-margin-top: 6rem;
+}
+
+.policy:last-of-type {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.policy h2 {
+  margin: 0 0 1rem;
+  font-size: clamp(1.5rem, 3.5vw, 2rem);
+}
+
+.policy h3 {
+  margin: 1.5rem 0 0.65rem;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.policy p,
+.policy li {
+  color: var(--mute);
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.65;
+}
+
+.policy p {
+  margin: 0 0 1rem;
+}
+
+.policy ul {
+  margin: 0 0 1rem;
+  padding-left: 1.25rem;
+}
+
+.policy li {
+  margin-bottom: 0.45rem;
+}
+
+.policy a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.policy strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.policies__back {
+  margin: clamp(2rem, 5vw, 2.75rem) 0 0;
+  text-align: center;
 }
 
 /* Reveal on scroll */
