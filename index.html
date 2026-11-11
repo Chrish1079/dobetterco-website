@@ -24,7 +24,7 @@
       <nav class="nav" aria-label="Primary">
         <a href="#collection">Shop</a>
         <a href="story.html">Story</a>
-        <a href="#contact">Contact</a>
+        <a href="contact.html">Contact</a>
       </nav>
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu">
         <span></span>
@@ -35,7 +35,7 @@
     <div class="mobile-nav" id="mobile-nav" hidden>
       <a href="#collection">Shop</a>
       <a href="story.html">Story</a>
-      <a href="#contact">Contact</a>
+      <a href="contact.html">Contact</a>
     </div>
 
     <main id="main">
@@ -226,7 +226,7 @@
         </ul>
       </section>
 
-      <section class="contact" id="contact">
+      <section class="contact" id="email-signup">
         <div class="section-head">
           <h2>Stay in the loop</h2>
           <p>New drops, restocks, and behind-the-scenes — no spam.</p>
@@ -237,6 +237,7 @@
           method="POST"
           netlify
           netlify-honeypot="bot-field"
+          data-success="You're on the list. We'll be in touch."
         >
           <input type="hidden" name="form-name" value="email-signup" />
           <p class="sr-only" aria-hidden="true">

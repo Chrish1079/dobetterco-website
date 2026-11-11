@@ -52,32 +52,35 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") setMenuOpen(false);
 });
 
-const form = document.querySelector(".signup");
-const note = document.querySelector(".form-note");
+document.querySelectorAll(".signup, .contact-form").forEach((form) => {
+  const note = form.parentElement?.querySelector(".form-note");
+  const defaultSuccess = form.classList.contains("contact-form")
+    ? "Thanks — we received your message and will get back to you soon."
+    : "You're on the list. We'll be in touch.";
+  const successMessage = form.getAttribute("data-success") || defaultSuccess;
 
-form?.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  const email = new FormData(form).get("email");
-  if (typeof email !== "string" || !email.trim()) return;
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
 
-  const submitBtn = form.querySelector('button[type="submit"]');
-  if (submitBtn) submitBtn.disabled = true;
-  if (note) note.textContent = "";
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (submitBtn) submitBtn.disabled = true;
+    if (note) note.textContent = "";
 
-  try {
-    const response = await fetch("/", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams(new FormData(form)).toString(),
-    });
-    if (!response.ok) throw new Error("Submit failed");
-    if (note) note.textContent = "You're on the list. We'll be in touch.";
-    form.reset();
-  } catch {
-    if (note) note.textContent = "Something went wrong. Please try again.";
-  } finally {
-    if (submitBtn) submitBtn.disabled = false;
-  }
+    try {
+      const response = await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(new FormData(form)).toString(),
+      });
+      if (!response.ok) throw new Error("Submit failed");
+      if (note) note.textContent = successMessage;
+      form.reset();
+    } catch {
+      if (note) note.textContent = "Something went wrong. Please try again.";
+    } finally {
+      if (submitBtn) submitBtn.disabled = false;
+    }
+  });
 });
 
 const revealItems = document.querySelectorAll(

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact — DO BETTER CO.</title>
+    <meta
+      name="description"
+      content="Contact DO BETTER CO. with order questions, returns, or general feedback."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Outfit:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="contact-page">
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <a class="logo" href="index.html" aria-label="DO BETTER CO. home">DO BETTER CO.</a>
+      <nav class="nav" aria-label="Primary">
+        <a href="index.html#collection">Shop</a>
+        <a href="story.html">Story</a>
+        <a href="contact.html" aria-current="page">Contact</a>
+      </nav>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu">
+        <span></span>
+        <span></span>
+      </button>
+    </header>
+
+    <div class="mobile-nav" id="mobile-nav" hidden>
+      <a href="index.html#collection">Shop</a>
+      <a href="story.html">Story</a>
+      <a href="contact.html" aria-current="page">Contact</a>
+    </div>
+
+    <main id="main" class="contact-page__main">
+      <div class="contact-page__inner">
+        <header class="contact-page__header">
+          <h1>Contact</h1>
+        </header>
+
+        <form
+          class="contact-form"
+          name="contact"
+          method="POST"
+          netlify
+          netlify-honeypot="bot-field"
+          data-success="Thanks — we received your message and will get back to you soon."
+        >
+          <input type="hidden" name="form-name" value="contact" />
+          <p class="sr-only" aria-hidden="true">
+            <label>
+              Don't fill this out:
+              <input name="bot-field" tabindex="-1" autocomplete="off" />
+            </label>
+          </p>
+
+          <div class="contact-form__row contact-form__row--split">
+            <div class="contact-form__field">
+              <label for="contact-name">Name</label>
+              <input id="contact-name" name="name" type="text" autocomplete="name" required />
+            </div>
+            <div class="contact-form__field">
+              <label for="contact-email">Email <span class="contact-form__req" aria-hidden="true">*</span></label>
+              <input
+                id="contact-email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                required
+                aria-required="true"
+              />
+            </div>
+          </div>
+
+          <div class="contact-form__field">
+            <label for="contact-phone">Phone number</label>
+            <input id="contact-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" />
+          </div>
+
+          <div class="contact-form__field">
+            <label for="contact-message">Comment</label>
+            <textarea
+              id="contact-message"
+              name="message"
+              rows="6"
+              required
+              placeholder="How can we help?"
+            ></textarea>
+          </div>
+
+          <button class="btn btn--primary contact-form__submit" type="submit">Send</button>
+        </form>
+        <p class="form-note" role="status" aria-live="polite"></p>
+
+        <p class="contact-page__aside">
+          For drop reminders, join the list on the
+          <a href="index.html#email-signup">homepage</a>.
+        </p>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer__group">
+        <p class="footer-brand">DO BETTER CO.</p>
+        <nav class="footer-legal" aria-label="Policies">
+          <a href="policies.html#privacy">Privacy</a>
+          <a href="policies.html#refunds">Refunds</a>
+          <a href="policies.html#terms">Terms</a>
+          <a href="policies.html#shipping">Shipping</a>
+        </nav>
+      </div>
+      <p class="footer-meta">&copy; <span id="year"></span> Do Better Co. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
