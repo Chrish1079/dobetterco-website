@@ -97,10 +97,38 @@
         </form>
         <p class="form-note" role="status" aria-live="polite"></p>
 
-        <p class="contact-page__aside">
-          For drop reminders, join the list on the
-          <a href="index.html#email-signup">homepage</a>.
-        </p>
+        <section class="contact-page__signup" id="email-signup" aria-labelledby="signup-heading">
+          <div class="section-head">
+            <h2 id="signup-heading">Stay in the loop</h2>
+            <p>New drops, restocks, and behind-the-scenes — no spam.</p>
+          </div>
+          <form
+            class="signup"
+            name="email-signup"
+            method="POST"
+            netlify
+            netlify-honeypot="bot-field"
+          >
+            <input type="hidden" name="form-name" value="email-signup" />
+            <p class="sr-only" aria-hidden="true">
+              <label>
+                Don't fill this out:
+                <input name="bot-field" tabindex="-1" autocomplete="off" />
+              </label>
+            </p>
+            <label class="sr-only" for="signup-email">Email address</label>
+            <input
+              id="signup-email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              placeholder="you@email.com"
+              required
+            />
+            <button class="btn btn--primary" type="submit">Join the list</button>
+          </form>
+          <p class="form-note" role="status" aria-live="polite"></p>
+        </section>
       </div>
     </main>
 
