@@ -54,10 +54,9 @@ document.addEventListener("keydown", (event) => {
 
 document.querySelectorAll(".signup, .contact-form").forEach((form) => {
   const note = form.parentElement?.querySelector(".form-note");
-  const defaultSuccess = form.classList.contains("contact-form")
+  const successMessage = form.classList.contains("contact-form")
     ? "Thanks — we received your message and will get back to you soon."
     : "You're on the list. We'll be in touch.";
-  const successMessage = form.getAttribute("data-success") || defaultSuccess;
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
