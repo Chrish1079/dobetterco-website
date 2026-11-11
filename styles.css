@@ -677,12 +677,15 @@ h3,
 
 /* Contact page */
 .contact-page__main {
+  width: min(100%, var(--max));
+  margin-inline: auto;
   padding: clamp(5.5rem, 14vw, 7rem) var(--space) clamp(4rem, 10vw, 6rem);
 }
 
 .contact-page__inner {
-  width: min(100%, 40rem);
-  margin-inline: auto;
+  width: min(100%, var(--max));
+  margin-inline: 0;
+  text-align: left;
 }
 
 .contact-page__header h1 {
@@ -690,15 +693,28 @@ h3,
   font-size: clamp(2rem, 5vw, 3rem);
 }
 
-.contact-page__signup.contact {
-  margin-top: clamp(2rem, 5vw, 3rem);
-  padding-top: clamp(2.5rem, 6vw, 3.5rem);
-  padding-bottom: clamp(3rem, 8vw, 5rem);
+.contact-page__signup {
+  margin-top: clamp(2.75rem, 7vw, 4rem);
+  padding-top: clamp(2rem, 5vw, 2.75rem);
   border-top: 1px solid var(--line);
   text-align: left;
 }
 
+.contact-page__signup .section-head {
+  margin-bottom: clamp(1.25rem, 3vw, 1.75rem);
+}
+
+.contact-page__signup .section-head p {
+  max-width: 38ch;
+}
+
+.contact-page__signup .signup {
+  margin-inline: 0;
+  justify-content: flex-start;
+}
+
 .contact-form {
+  max-width: 40rem;
   margin-top: clamp(1.5rem, 4vw, 2.25rem);
   display: flex;
   flex-direction: column;
