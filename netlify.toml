@@ -2,6 +2,10 @@
 [build]
   publish = "."
 
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
 [build.processing.html]
   ignore_html_forms = false
 

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout canceled — DO BETTER CO.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Outfit:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="checkout-page">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header site-header--solid">
+      <a class="logo" href="index.html" aria-label="DO BETTER CO. home">DO BETTER CO.</a>
+      <div class="site-header__end">
+        <nav class="nav" aria-label="Primary">
+          <a href="index.html#collection">Shop</a>
+          <a href="story.html">Story</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+        <button type="button" class="cart-toggle" aria-expanded="false" aria-controls="cart-drawer" aria-label="Open cart">
+          Cart<span class="cart-toggle__count" data-cart-count hidden>0</span>
+        </button>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu">
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </header>
+
+    <main id="main" class="checkout-main">
+      <div class="checkout-card">
+        <h1>Checkout canceled</h1>
+        <p>No charge was made. Your cart is still here whenever you’re ready.</p>
+        <a class="btn btn--primary" href="index.html#collection">Back to shop</a>
+      </div>
+    </main>
+
+    <div class="cart-backdrop" id="cart-backdrop" hidden></div>
+    <aside class="cart-drawer" id="cart-drawer" aria-labelledby="cart-title" hidden>
+      <div class="cart-drawer__head">
+        <h2 id="cart-title">Your cart</h2>
+        <button type="button" class="cart-drawer__close" aria-label="Close cart">×</button>
+      </div>
+      <p class="cart-empty" id="cart-empty">Your cart is empty.</p>
+      <ul class="cart-lines" id="cart-lines"></ul>
+      <div class="cart-drawer__foot" id="cart-footer" hidden>
+        <p class="cart-subtotal-row">
+          Subtotal <strong id="cart-subtotal">$0.00</strong>
+        </p>
+        <p class="cart-drawer__note">Shipping and tax are calculated at checkout.</p>
+        <p class="cart-error" id="cart-error" role="alert"></p>
+        <button type="button" class="btn btn--primary btn--block" data-cart-checkout>Checkout</button>
+      </div>
+    </aside>
+
+    <script src="script.js"></script>
+    <script src="cart.js"></script>
+  </body>
+</html>

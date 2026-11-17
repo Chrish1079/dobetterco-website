@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product — DO BETTER CO.</title>
+    <meta name="description" content="Shop DO BETTER CO. apparel." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Outfit:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="product-page">
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header site-header--solid">
+      <a class="logo" href="index.html" aria-label="DO BETTER CO. home">DO BETTER CO.</a>
+      <div class="site-header__end">
+        <nav class="nav" aria-label="Primary">
+          <a href="index.html#collection">Shop</a>
+          <a href="story.html">Story</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+        <button type="button" class="cart-toggle" aria-expanded="false" aria-controls="cart-drawer" aria-label="Open cart">
+          Cart<span class="cart-toggle__count" data-cart-count hidden>0</span>
+        </button>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu">
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </header>
+
+    <div class="mobile-nav" id="mobile-nav" hidden>
+      <a href="index.html#collection">Shop</a>
+      <a href="story.html">Story</a>
+      <a href="contact.html">Contact</a>
+    </div>
+
+    <main id="main" class="product-detail">
+      <p class="product-detail__back">
+        <a href="index.html#collection">← Back to shop</a>
+      </p>
+
+      <p id="product-loading" class="product-detail__loading">Loading…</p>
+
+      <div id="product-content" class="product-detail__layout" hidden>
+        <div class="product-detail__media">
+          <img id="product-image" src="" alt="" width="900" height="1125" />
+        </div>
+        <div class="product-detail__info">
+          <h1 id="product-name"></h1>
+          <p class="product-detail__price" id="product-price"></p>
+          <p class="product-detail__lede" id="product-description"></p>
+
+          <div class="product-detail__qty">
+            <label for="product-qty">Quantity</label>
+            <input id="product-qty" name="quantity" type="number" min="1" max="99" value="1" inputmode="numeric" />
+          </div>
+
+          <div class="product-detail__actions">
+            <button type="button" class="btn btn--primary btn--block" id="product-buy-now" data-buy-now>
+              Buy now
+            </button>
+            <button
+              type="button"
+              class="btn btn--ghost-dark btn--block add-to-cart"
+              id="product-add-cart"
+              data-product-id=""
+            >
+              Add to cart
+            </button>
+          </div>
+
+          <p class="product-detail__error" id="product-error" role="alert" hidden></p>
+        </div>
+      </div>
+
+      <div id="product-missing" class="product-detail__missing" hidden>
+        <h1>Product not found</h1>
+        <p>That item isn’t in our catalog right now.</p>
+        <a class="btn btn--primary" href="index.html#collection">Back to shop</a>
+      </div>
+    </main>
+
+    <div class="cart-backdrop" id="cart-backdrop" hidden></div>
+    <aside class="cart-drawer" id="cart-drawer" aria-labelledby="cart-title" hidden>
+      <div class="cart-drawer__head">
+        <h2 id="cart-title">Your cart</h2>
+        <button type="button" class="cart-drawer__close" aria-label="Close cart">×</button>
+      </div>
+      <p class="cart-empty" id="cart-empty">Your cart is empty.</p>
+      <ul class="cart-lines" id="cart-lines"></ul>
+      <div class="cart-drawer__foot" id="cart-footer" hidden>
+        <p class="cart-subtotal-row">
+          Subtotal <strong id="cart-subtotal">$0.00</strong>
+        </p>
+        <p class="cart-drawer__note">Shipping and tax are calculated at checkout.</p>
+        <p class="cart-error" id="cart-error" role="alert"></p>
+        <button type="button" class="btn btn--primary btn--block" data-cart-checkout>Checkout</button>
+      </div>
+    </aside>
+
+    <footer class="site-footer">
+      <div class="site-footer__group">
+        <p class="footer-brand">DO BETTER CO.</p>
+        <nav class="footer-legal" aria-label="Policies">
+          <a href="policies.html#privacy">Privacy</a>
+          <a href="policies.html#refunds">Refunds</a>
+          <a href="policies.html#terms">Terms</a>
+          <a href="policies.html#shipping">Shipping</a>
+        </nav>
+      </div>
+      <p class="footer-meta">&copy; <span id="year"></span> Do Better Co. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="cart.js"></script>
+    <script src="product.js"></script>
+  </body>
+</html>

@@ -1,30 +1,3 @@
-/**
- * Live Stripe Payment Link URLs (Dashboard → Payment links).
- * Paste each buy.stripe.com/... URL after creating the link for that product.
- */
-const stripePaymentLinks = {
-  "tee-olive-statement": "https://buy.stripe.com/5kQaEW95Kgo1dC05LxbV603",
-  "tee-black-statement": "https://buy.stripe.com/8x24gya9O0p341q3DpbV604",
-  "tee-navy-crest": "https://buy.stripe.com/fZuaEW1Di0p3gOc0rdbV605",
-  "tee-black-crest": "https://buy.stripe.com/eVqbJ00ze9ZDfK8fm7bV606",
-  "tee-forest-crest": "https://buy.stripe.com/aFa28qa9O0p369y3DpbV607",
-  "hat-heather-patch": "https://buy.stripe.com/dRm6oG6XC5Jn1Ti6PBbV608",
-  "hat-olive-patch": "https://buy.stripe.com/eVq14meq45Jn8hG5LxbV609",
-  "hat-black-patch": "https://buy.stripe.com/cNi7sK2Hm3BffK8a1NbV60a",
-  "hat-navy-patch": "https://buy.stripe.com/6oU28q1Di5JngOcddZbV60b",
-};
-
-document.querySelectorAll("[data-stripe-product]").forEach((productEl) => {
-  const key = productEl.getAttribute("data-stripe-product");
-  const url = key ? stripePaymentLinks[key] : "";
-  if (!url) return;
-  const anchor = productEl.querySelector("a");
-  if (!anchor) return;
-  anchor.href = url;
-  anchor.target = "_blank";
-  anchor.rel = "noopener noreferrer";
-});
-
 const year = document.getElementById("year");
 if (year) year.textContent = String(new Date().getFullYear());
 

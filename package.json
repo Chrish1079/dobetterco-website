@@ -1,0 +1,10 @@
+{
+  "name": "dobetterco",
+  "private": true,
+  "scripts": {
+    "stripe:sync-prices": "node scripts/sync-stripe-prices.mjs"
+  },
+  "dependencies": {
+    "stripe": "^17.7.0"
+  }
+}

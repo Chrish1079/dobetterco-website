@@ -19,17 +19,22 @@
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
 
-    <header class="site-header">
+    <header class="site-header site-header--solid">
       <a class="logo" href="#top" aria-label="DO BETTER CO. home">DO BETTER CO.</a>
-      <nav class="nav" aria-label="Primary">
-        <a href="#collection">Shop</a>
-        <a href="story.html">Story</a>
-        <a href="contact.html">Contact</a>
-      </nav>
-      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu">
-        <span></span>
-        <span></span>
-      </button>
+      <div class="site-header__end">
+        <nav class="nav" aria-label="Primary">
+          <a href="#collection">Shop</a>
+          <a href="story.html">Story</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+        <button type="button" class="cart-toggle" aria-expanded="false" aria-controls="cart-drawer" aria-label="Open cart">
+          Cart<span class="cart-toggle__count" data-cart-count hidden>0</span>
+        </button>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu">
+          <span></span>
+          <span></span>
+        </button>
+      </div>
     </header>
 
     <div class="mobile-nav" id="mobile-nav" hidden>
@@ -66,8 +71,7 @@
         </div>
         <p class="collection__group">Tees</p>
         <ul class="product-grid">
-          <li class="product" data-stripe-product="tee-olive-statement">
-            <a href="https://buy.stripe.com/5kQaEW95Kgo1dC05LxbV603" target="_blank" rel="noopener noreferrer">
+          <li class="product"><a class="product__card" href="product.html?id=tee-olive-statement">
               <div class="product__img">
                 <img
                   src="images/products/tee-olive-statement.png"
@@ -80,11 +84,8 @@
               <div class="product__meta">
                 <h3>Olive Statement Tee</h3>
                 <span>$30</span>
-              </div>
-            </a>
-          </li>
-          <li class="product" data-stripe-product="tee-black-statement">
-            <a href="https://buy.stripe.com/8x24gya9O0p341q3DpbV604" target="_blank" rel="noopener noreferrer">
+              </div></a></li>
+          <li class="product"><a class="product__card" href="product.html?id=tee-black-statement">
               <div class="product__img">
                 <img
                   src="images/products/tee-black-statement.png"
@@ -97,11 +98,8 @@
               <div class="product__meta">
                 <h3>Black Statement Tee</h3>
                 <span>$30</span>
-              </div>
-            </a>
-          </li>
-          <li class="product" data-stripe-product="tee-navy-crest">
-            <a href="https://buy.stripe.com/fZuaEW1Di0p3gOc0rdbV605" target="_blank" rel="noopener noreferrer">
+              </div></a></li>
+          <li class="product"><a class="product__card" href="product.html?id=tee-navy-crest">
               <div class="product__img">
                 <img
                   src="images/products/tee-navy-crest.png"
@@ -114,11 +112,8 @@
               <div class="product__meta">
                 <h3>Navy Crest Tee</h3>
                 <span>$30</span>
-              </div>
-            </a>
-          </li>
-          <li class="product" data-stripe-product="tee-black-crest">
-            <a href="https://buy.stripe.com/eVqbJ00ze9ZDfK8fm7bV606" target="_blank" rel="noopener noreferrer">
+              </div></a></li>
+          <li class="product"><a class="product__card" href="product.html?id=tee-black-crest">
               <div class="product__img">
                 <img
                   src="images/products/tee-black-crest.png"
@@ -131,11 +126,8 @@
               <div class="product__meta">
                 <h3>Black Crest Tee</h3>
                 <span>$30</span>
-              </div>
-            </a>
-          </li>
-          <li class="product" data-stripe-product="tee-forest-crest">
-            <a href="https://buy.stripe.com/aFa28qa9O0p369y3DpbV607" target="_blank" rel="noopener noreferrer">
+              </div></a></li>
+          <li class="product"><a class="product__card" href="product.html?id=tee-forest-crest">
               <div class="product__img">
                 <img
                   src="images/products/tee-forest-crest.jpg"
@@ -148,15 +140,12 @@
               <div class="product__meta">
                 <h3>Forest Crest Tee</h3>
                 <span>$30</span>
-              </div>
-            </a>
-          </li>
+              </div></a></li>
         </ul>
 
         <p class="collection__group">Hats</p>
         <ul class="product-grid product-grid--hats">
-          <li class="product" data-stripe-product="hat-heather-patch">
-            <a href="https://buy.stripe.com/dRm6oG6XC5Jn1Ti6PBbV608" target="_blank" rel="noopener noreferrer">
+          <li class="product"><a class="product__card" href="product.html?id=hat-heather-patch">
               <div class="product__img">
                 <img
                   src="images/products/hat-heather-patch.png"
@@ -169,11 +158,8 @@
               <div class="product__meta">
                 <h3>Heather Patch Hat</h3>
                 <span>$35</span>
-              </div>
-            </a>
-          </li>
-          <li class="product" data-stripe-product="hat-olive-patch">
-            <a href="https://buy.stripe.com/eVq14meq45Jn8hG5LxbV609" target="_blank" rel="noopener noreferrer">
+              </div></a></li>
+          <li class="product"><a class="product__card" href="product.html?id=hat-olive-patch">
               <div class="product__img">
                 <img
                   src="images/products/hat-olive-patch.png"
@@ -186,11 +172,8 @@
               <div class="product__meta">
                 <h3>Olive Patch Hat</h3>
                 <span>$35</span>
-              </div>
-            </a>
-          </li>
-          <li class="product" data-stripe-product="hat-black-patch">
-            <a href="https://buy.stripe.com/cNi7sK2Hm3BffK8a1NbV60a" target="_blank" rel="noopener noreferrer">
+              </div></a></li>
+          <li class="product"><a class="product__card" href="product.html?id=hat-black-patch">
               <div class="product__img">
                 <img
                   src="images/products/hat-black-patch.png"
@@ -203,11 +186,8 @@
               <div class="product__meta">
                 <h3>Black Patch Hat</h3>
                 <span>$35</span>
-              </div>
-            </a>
-          </li>
-          <li class="product" data-stripe-product="hat-navy-patch">
-            <a href="https://buy.stripe.com/6oU28q1Di5JngOcddZbV60b" target="_blank" rel="noopener noreferrer">
+              </div></a></li>
+          <li class="product"><a class="product__card" href="product.html?id=hat-navy-patch">
               <div class="product__img">
                 <img
                   src="images/products/hat-navy-patch.jpg"
@@ -220,9 +200,7 @@
               <div class="product__meta">
                 <h3>Navy Patch Hat</h3>
                 <span>$35</span>
-              </div>
-            </a>
-          </li>
+              </div></a></li>
         </ul>
       </section>
 
@@ -260,6 +238,24 @@
       </section>
     </main>
 
+    <div class="cart-backdrop" id="cart-backdrop" hidden></div>
+    <aside class="cart-drawer" id="cart-drawer" aria-labelledby="cart-title" hidden>
+      <div class="cart-drawer__head">
+        <h2 id="cart-title">Your cart</h2>
+        <button type="button" class="cart-drawer__close" aria-label="Close cart">×</button>
+      </div>
+      <p class="cart-empty" id="cart-empty">Your cart is empty.</p>
+      <ul class="cart-lines" id="cart-lines"></ul>
+      <div class="cart-drawer__foot" id="cart-footer" hidden>
+        <p class="cart-subtotal-row">
+          Subtotal <strong id="cart-subtotal">$0.00</strong>
+        </p>
+        <p class="cart-drawer__note">Shipping and tax are calculated at checkout.</p>
+        <p class="cart-error" id="cart-error" role="alert"></p>
+        <button type="button" class="btn btn--primary btn--block" data-cart-checkout>Checkout</button>
+      </div>
+    </aside>
+
     <footer class="site-footer">
       <div class="site-footer__group">
         <p class="footer-brand">DO BETTER CO.</p>
@@ -274,5 +270,6 @@
     </footer>
 
     <script src="script.js"></script>
+    <script src="cart.js"></script>
   </body>
 </html>
