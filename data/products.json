@@ -4,62 +4,62 @@
     "name": "Olive Statement Tee",
     "priceCents": 3000,
     "image": "images/products/tee-olive-statement.png",
-    "stripePriceId": ""
+    "stripePriceId": "price_1UYhlgAErqXe9fCb3rwYJK4F"
   },
   {
     "id": "tee-black-statement",
     "name": "Black Statement Tee",
     "priceCents": 3000,
     "image": "images/products/tee-black-statement.png",
-    "stripePriceId": ""
+    "stripePriceId": "price_1UYhlkAErqXe9fCb294Xkzyd"
   },
   {
     "id": "tee-navy-crest",
     "name": "Navy Crest Tee",
     "priceCents": 3000,
     "image": "images/products/tee-navy-crest.png",
-    "stripePriceId": ""
+    "stripePriceId": "price_1UYhlkAErqXe9fCb8owV5QD7"
   },
   {
     "id": "tee-black-crest",
     "name": "Black Crest Tee",
     "priceCents": 3000,
     "image": "images/products/tee-black-crest.png",
-    "stripePriceId": ""
+    "stripePriceId": "price_1UYhllAErqXe9fCbhMD2vBEe"
   },
   {
     "id": "tee-forest-crest",
     "name": "Forest Crest Tee",
     "priceCents": 3000,
     "image": "images/products/tee-forest-crest.jpg",
-    "stripePriceId": ""
+    "stripePriceId": "price_1UYhllAErqXe9fCbAKTpxr83"
   },
   {
     "id": "hat-heather-patch",
     "name": "Heather Patch Hat",
     "priceCents": 3500,
     "image": "images/products/hat-heather-patch.png",
-    "stripePriceId": ""
+    "stripePriceId": "price_1UYhllAErqXe9fCboVWmcC7X"
   },
   {
     "id": "hat-olive-patch",
     "name": "Olive Patch Hat",
     "priceCents": 3500,
     "image": "images/products/hat-olive-patch.png",
-    "stripePriceId": ""
+    "stripePriceId": "price_1UYhlnAErqXe9fCbZLMoDPHZ"
   },
   {
     "id": "hat-black-patch",
     "name": "Black Patch Hat",
     "priceCents": 3500,
     "image": "images/products/hat-black-patch.png",
-    "stripePriceId": ""
+    "stripePriceId": "price_1UYhlyAErqXe9fCbGvGyv8u9"
   },
   {
     "id": "hat-navy-patch",
     "name": "Navy Patch Hat",
     "priceCents": 3500,
     "image": "images/products/hat-navy-patch.jpg",
-    "stripePriceId": ""
+    "stripePriceId": "price_1UYhlyAErqXe9fCbKgIbFWvq"
   }
 ]
