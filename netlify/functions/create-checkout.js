@@ -1,5 +1,11 @@
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const Stripe = require("stripe");
 const products = require("../../data/products.json");
+
+function getStripe() {
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) return null;
+  return new Stripe(key);
+}
 
 const productById = new Map(products.map((p) => [p.id, p]));
 
@@ -36,7 +42,8 @@ exports.handler = async (event) => {
     return { statusCode: 405, body: "Method Not Allowed" };
   }
 
-  if (!process.env.STRIPE_SECRET_KEY) {
+  const stripe = getStripe();
+  if (!stripe) {
     return json(500, { error: "Checkout is not configured. Add STRIPE_SECRET_KEY in Netlify." });
   }
 
