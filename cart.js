@@ -107,8 +107,14 @@ function renderCart() {
   if (subtotalEl) subtotalEl.textContent = formatMoney(cartSubtotal(items));
 }
 
-function addToCart(productId, quantity = 1) {
+async function addToCart(productId, quantity = 1) {
   if (!catalog.has(productId)) return;
+  if (window.dobetterInventory) {
+    await window.dobetterInventory.ready;
+    if (window.dobetterInventory.isSoldOut(productId)) return;
+    const left = window.dobetterInventory.getRemaining(productId);
+    if (left !== null && quantity > left) return;
+  }
   const items = readCart();
   const existing = items.find((row) => row.id === productId);
   if (existing) existing.quantity = Math.min(99, existing.quantity + quantity);

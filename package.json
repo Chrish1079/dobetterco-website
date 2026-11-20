@@ -5,6 +5,7 @@
     "stripe:sync-prices": "node scripts/sync-stripe-prices.mjs"
   },
   "dependencies": {
+    "@netlify/blobs": "^8.1.0",
     "stripe": "^17.7.0"
   }
 }

@@ -1,5 +1,6 @@
 const Stripe = require("stripe");
 const products = require("../../data/products.json");
+const { validateCartItems } = require("./_lib/inventory");
 
 function getStripe() {
   const key = process.env.STRIPE_SECRET_KEY;
@@ -78,6 +79,13 @@ exports.handler = async (event) => {
     }
 
     lineItems.push({ price: product.stripePriceId, quantity });
+  }
+
+  try {
+    await validateCartItems(items);
+  } catch (err) {
+    const status = err.statusCode || 409;
+    return json(status, { error: err.message || "Not enough stock." });
   }
 
   const origin = siteOrigin(event);

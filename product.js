@@ -46,11 +46,49 @@ function setProductPage(product) {
   document.title = `${product.name} — DO BETTER CO.`;
 }
 
+function applyProductStock(product) {
+  if (!product) return;
+
+  const buyNowBtn = document.getElementById("product-buy-now");
+  const addBtn = document.getElementById("product-add-cart");
+  const qtyEl = document.getElementById("product-qty");
+  const media = document.querySelector(".product-detail__media");
+
+  let stockNote = document.getElementById("product-stock-note");
+  if (!stockNote) {
+    stockNote = document.createElement("p");
+    stockNote.id = "product-stock-note";
+    stockNote.className = "product-detail__stock";
+    const qtyRow = document.querySelector(".product-detail__qty");
+    qtyRow?.parentElement?.insertBefore(stockNote, qtyRow);
+  }
+
+  const left = window.dobetterInventory?.getRemaining(product.id);
+  if (left === null) {
+    stockNote.textContent = "";
+    media?.classList.remove("product-detail__media--sold-out");
+    return;
+  }
+
+  if (left <= 0) {
+    stockNote.textContent = "Sold out";
+    media?.classList.add("product-detail__media--sold-out");
+    return;
+  }
+
+  stockNote.textContent = "";
+  media?.classList.remove("product-detail__media--sold-out");
+  if (qtyEl) qtyEl.max = String(Math.min(99, left));
+}
+
 async function initProductPage() {
   const productId = getProductIdFromUrl();
-  await window.dobetterCart.ready;
+  await Promise.all([window.dobetterCart.ready, window.dobetterInventory?.ready ?? Promise.resolve()]);
   const product = productId ? window.dobetterCart.getProduct(productId) : null;
   setProductPage(product);
+  applyProductStock(product);
+
+  document.addEventListener("inventory:updated", () => applyProductStock(product));
 
   const buyNowBtn = document.getElementById("product-buy-now");
   const errorEl = document.getElementById("product-error");
