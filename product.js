@@ -22,10 +22,40 @@ function productHasSizes(product) {
   return window.dobetterInventory?.productHasSizes(product);
 }
 
+function readSelectedSizeFromDom() {
+  const checked = document.querySelector('#product-size input[name="size"]:checked');
+  return checked instanceof HTMLInputElement ? checked.value : "";
+}
+
+function updateSizeOptionStates(product) {
+  if (!productHasSizes(product)) return;
+  const container = document.getElementById("product-size-options");
+  if (!container) return;
+
+  let selectedStillValid = false;
+
+  for (const row of product.sizes) {
+    const input = container.querySelector(`input[name="size"][value="${row.id}"]`);
+    if (!(input instanceof HTMLInputElement)) continue;
+    const soldOut = window.dobetterInventory?.isSizeSoldOut(product.id, row.id);
+    input.disabled = soldOut;
+    input.closest(".product-detail__size")?.classList.toggle("product-detail__size--unavailable", soldOut);
+    if (input.checked && !soldOut) selectedStillValid = true;
+    if (input.checked && soldOut) input.checked = false;
+  }
+
+  if (!selectedStillValid) {
+    const first = container.querySelector('input[name="size"]:not(:disabled)');
+    if (first instanceof HTMLInputElement) first.checked = true;
+  }
+}
+
 function buildSizeOptions(product) {
   const fieldset = document.getElementById("product-size");
   const container = document.getElementById("product-size-options");
   if (!fieldset || !container) return;
+
+  const previous = readSelectedSizeFromDom();
 
   container.innerHTML = "";
 
@@ -35,8 +65,8 @@ function buildSizeOptions(product) {
   }
 
   fieldset.hidden = false;
-  const name = `size-${product.id}`;
   let firstAvailable = null;
+  let restore = null;
 
   for (const row of product.sizes) {
     const soldOut = window.dobetterInventory?.isSizeSoldOut(product.id, row.id);
@@ -58,12 +88,12 @@ function buildSizeOptions(product) {
     label.append(input, span);
     container.appendChild(label);
 
+    if (!soldOut && row.id === previous) restore = input;
     if (!soldOut && !firstAvailable) firstAvailable = input;
   }
 
-  if (firstAvailable) {
-    firstAvailable.checked = true;
-  }
+  const toSelect = restore || firstAvailable;
+  if (toSelect) toSelect.checked = true;
 }
 
 function setProductPage(product) {
@@ -121,7 +151,7 @@ function applyProductStock(product) {
   }
 
   if (productHasSizes(product)) {
-    buildSizeOptions(product);
+    updateSizeOptionStates(product);
 
     const size = getSelectedSize();
     const left = size ? window.dobetterInventory?.getRemaining(product.id, size) : null;

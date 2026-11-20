@@ -1169,10 +1169,10 @@ body.contact-page .site-header {
 
 .product-detail__size input {
   position: absolute;
+  inset: 0;
+  margin: 0;
   opacity: 0;
-  width: 0;
-  height: 0;
-  pointer-events: none;
+  cursor: pointer;
 }
 
 .product-detail__size span {
@@ -1187,6 +1187,7 @@ body.contact-page .site-header {
   font-size: 0.9rem;
   font-weight: 500;
   line-height: 1;
+  pointer-events: none;
   transition: border-color 0.15s, background 0.15s, color 0.15s;
 }
 
@@ -1207,6 +1208,10 @@ body.contact-page .site-header {
 }
 
 .product-detail__size--unavailable {
+  cursor: not-allowed;
+}
+
+.product-detail__size--unavailable input {
   cursor: not-allowed;
 }
 
