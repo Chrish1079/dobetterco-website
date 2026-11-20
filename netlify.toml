@@ -6,6 +6,7 @@
   directory = "netlify/functions"
   node_bundler = "esbuild"
   included_files = ["data/products.json"]
+  external_node_modules = ["@netlify/blobs"]
 
 [build.processing.html]
   ignore_html_forms = false

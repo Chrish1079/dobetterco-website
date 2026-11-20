@@ -10,7 +10,25 @@ function isTracked(product) {
   return product && typeof product.stock === "number" && product.stock >= 0;
 }
 
-async function getStoreInstance() {
+function catalogStock() {
+  const out = {};
+  for (const product of products) {
+    out[product.id] = isTracked(product) ? product.stock : null;
+  }
+  return out;
+}
+
+function getStoreInstance() {
+  const siteID = process.env.SITE_ID || process.env.NETLIFY_SITE_ID;
+  const token = process.env.NETLIFY_AUTH_TOKEN;
+  if (siteID && token) {
+    return getStore({
+      name: "product-inventory",
+      siteID,
+      token,
+      consistency: "strong",
+    });
+  }
   return getStore({ name: "product-inventory", consistency: "strong" });
 }
 
@@ -22,22 +40,32 @@ async function readRemaining(store, productId, fallback) {
 
 /** @returns {Record<string, number | null>} null = unlimited */
 async function getPublicStock() {
-  const store = await getStoreInstance();
-  const out = {};
-
-  for (const product of products) {
-    if (!isTracked(product)) {
-      out[product.id] = null;
-      continue;
-    }
-    const remaining = await readRemaining(store, product.id, product.stock);
-    if (!(await store.get(product.id))) {
-      await store.setJSON(product.id, { remaining });
-    }
-    out[product.id] = remaining;
+  let store;
+  try {
+    store = getStoreInstance();
+  } catch (err) {
+    console.error("Blobs store unavailable:", err.message);
+    return catalogStock();
   }
 
-  return out;
+  try {
+    const out = {};
+    for (const product of products) {
+      if (!isTracked(product)) {
+        out[product.id] = null;
+        continue;
+      }
+      const remaining = await readRemaining(store, product.id, product.stock);
+      if (!(await store.get(product.id))) {
+        await store.setJSON(product.id, { remaining });
+      }
+      out[product.id] = remaining;
+    }
+    return out;
+  } catch (err) {
+    console.error("Blobs read failed:", err.message);
+    return catalogStock();
+  }
 }
 
 async function validateCartItems(items) {
@@ -64,14 +92,24 @@ async function validateCartItems(items) {
 }
 
 async function decrementForOrder(decrements) {
-  const store = await getStoreInstance();
+  let store;
+  try {
+    store = getStoreInstance();
+  } catch (err) {
+    console.error("Blobs store unavailable for decrement:", err.message);
+    return;
+  }
 
-  for (const [productId, quantity] of Object.entries(decrements)) {
-    const product = productById.get(productId);
-    if (!product || !isTracked(product) || quantity < 1) continue;
+  try {
+    for (const [productId, quantity] of Object.entries(decrements)) {
+      const product = productById.get(productId);
+      if (!product || !isTracked(product) || quantity < 1) continue;
 
-    const remaining = await readRemaining(store, productId, product.stock);
-    await store.setJSON(productId, { remaining: Math.max(0, remaining - quantity) });
+      const remaining = await readRemaining(store, productId, product.stock);
+      await store.setJSON(productId, { remaining: Math.max(0, remaining - quantity) });
+    }
+  } catch (err) {
+    console.error("Blobs decrement failed:", err.message);
   }
 }
 
