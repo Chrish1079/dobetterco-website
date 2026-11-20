@@ -1,6 +1,6 @@
 const Stripe = require("stripe");
 const products = require("../../data/products.json");
-const { validateCartItems } = require("./_lib/inventory");
+const { validateCartItems, normalizeCartItem, productSizes } = require("./_lib/inventory");
 
 function getStripe() {
   const key = process.env.STRIPE_SECRET_KEY;
@@ -60,29 +60,39 @@ exports.handler = async (event) => {
     return json(400, { error: "Your cart is empty." });
   }
 
+  const normalized = [];
   const lineItems = [];
-  for (const item of items) {
-    const id = typeof item.id === "string" ? item.id : "";
-    const quantity = Number(item.quantity);
-    if (!id || !Number.isInteger(quantity) || quantity < 1 || quantity > 99) {
+  for (const raw of items) {
+    const item = normalizeCartItem(raw);
+    if (!item.id || !Number.isInteger(item.quantity) || item.quantity < 1 || item.quantity > 99) {
       return json(400, { error: "Invalid cart item." });
     }
 
-    const product = productById.get(id);
+    const product = productById.get(item.id);
     if (!product) {
-      return json(400, { error: `Unknown product: ${id}` });
+      return json(400, { error: `Unknown product: ${item.id}` });
     }
+
+    const sizes = productSizes(product);
+    if (sizes && !item.size) {
+      return json(400, { error: `Choose a size for “${product.name}”.` });
+    }
+    if (sizes && !sizes.some((s) => s.id === item.size)) {
+      return json(400, { error: `Invalid size for “${product.name}”.` });
+    }
+
     if (!product.stripePriceId) {
       return json(503, {
         error: `Stripe Price ID missing for “${product.name}”. Add stripePriceId in data/products.json.`,
       });
     }
 
-    lineItems.push({ price: product.stripePriceId, quantity });
+    normalized.push(item);
+    lineItems.push({ price: product.stripePriceId, quantity: item.quantity });
   }
 
   try {
-    await validateCartItems(items);
+    await validateCartItems(normalized);
   } catch (err) {
     const status = err.statusCode || 409;
     return json(status, { error: err.message || "Not enough stock." });
@@ -99,6 +109,11 @@ exports.handler = async (event) => {
       allow_promotion_codes: true,
       shipping_address_collection: { allowed_countries: ["US"] },
       phone_number_collection: { enabled: true },
+      metadata: {
+        dobetter_order: JSON.stringify(
+          normalized.map((row) => ({ id: row.id, size: row.size || "", qty: row.quantity }))
+        ),
+      },
     });
 
     return json(200, { url: session.url });

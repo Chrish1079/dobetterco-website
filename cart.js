@@ -1,11 +1,25 @@
 const CART_KEY = "dobetterco-cart";
 const CHECKOUT_ENDPOINT = "/.netlify/functions/create-checkout";
 
-/** @type {Map<string, { id: string, name: string, priceCents: number, image: string }>} */
+/** @type {Map<string, { id: string, name: string, priceCents: number, image: string, sizes?: Array<{ id: string, label: string }> }>} */
 let catalog = new Map();
 
 function formatMoney(cents) {
   return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(cents / 100);
+}
+
+function cartRowKey(id, size) {
+  return size ? `${id}::${size}` : id;
+}
+
+function productRequiresSize(product) {
+  return product && Array.isArray(product.sizes) && product.sizes.length > 0;
+}
+
+function sizeLabel(product, sizeId) {
+  if (!product || !sizeId) return "";
+  const row = product.sizes?.find((s) => s.id === sizeId);
+  return row ? row.label || row.id : sizeId;
 }
 
 function readCart() {
@@ -13,9 +27,16 @@ function readCart() {
     const raw = localStorage.getItem(CART_KEY);
     const parsed = raw ? JSON.parse(raw) : [];
     if (!Array.isArray(parsed)) return [];
-    return parsed.filter(
-      (row) => row && typeof row.id === "string" && Number.isInteger(row.quantity) && row.quantity > 0
-    );
+    return parsed.filter((row) => {
+      if (!row || typeof row.id !== "string" || !Number.isInteger(row.quantity) || row.quantity <= 0) {
+        return false;
+      }
+      const product = catalog.get(row.id);
+      if (productRequiresSize(product)) {
+        return typeof row.size === "string" && row.size.length > 0;
+      }
+      return true;
+    });
   } catch {
     return [];
   }
@@ -86,20 +107,25 @@ function renderCart() {
     const product = catalog.get(row.id);
     if (!product) continue;
 
+    const sizeText = row.size ? sizeLabel(product, row.size) : "";
+    const metaLine = sizeText ? `<p class="cart-line__size">Size ${sizeText}</p>` : "";
+    const lineKey = cartRowKey(row.id, row.size || "");
+
     const li = document.createElement("li");
     li.className = "cart-line";
     li.innerHTML = `
       <img class="cart-line__thumb" src="${product.image}" alt="" width="64" height="80" loading="lazy" />
       <div class="cart-line__body">
         <p class="cart-line__name">${product.name}</p>
+        ${metaLine}
         <p class="cart-line__price">${formatMoney(product.priceCents)}</p>
-        <div class="cart-line__qty" role="group" aria-label="Quantity for ${product.name}">
-          <button type="button" class="cart-line__qty-btn" data-cart-action="dec" data-product-id="${row.id}" aria-label="Decrease quantity">−</button>
+        <div class="cart-line__qty" role="group" aria-label="Quantity for ${product.name}${sizeText ? `, size ${sizeText}` : ""}">
+          <button type="button" class="cart-line__qty-btn" data-cart-action="dec" data-line-key="${lineKey}" aria-label="Decrease quantity">−</button>
           <span class="cart-line__qty-val">${row.quantity}</span>
-          <button type="button" class="cart-line__qty-btn" data-cart-action="inc" data-product-id="${row.id}" aria-label="Increase quantity">+</button>
+          <button type="button" class="cart-line__qty-btn" data-cart-action="inc" data-line-key="${lineKey}" aria-label="Increase quantity">+</button>
         </div>
       </div>
-      <button type="button" class="cart-line__remove" data-cart-action="remove" data-product-id="${row.id}" aria-label="Remove ${product.name}">Remove</button>
+      <button type="button" class="cart-line__remove" data-cart-action="remove" data-line-key="${lineKey}" aria-label="Remove ${product.name}">Remove</button>
     `;
     linesEl.appendChild(li);
   }
@@ -107,32 +133,60 @@ function renderCart() {
   if (subtotalEl) subtotalEl.textContent = formatMoney(cartSubtotal(items));
 }
 
-async function addToCart(productId, quantity = 1) {
-  if (!catalog.has(productId)) return;
+function maxQuantityFor(productId, size) {
+  if (!window.dobetterInventory) return 99;
+  const left = window.dobetterInventory.getRemaining(productId, size || undefined);
+  if (left === null) return 99;
+  return Math.max(0, Math.min(99, left));
+}
+
+async function addToCart(productId, quantity = 1, size = "") {
+  const product = catalog.get(productId);
+  if (!product) return;
+  if (productRequiresSize(product)) {
+    if (!size) return;
+    if (!product.sizes.some((s) => s.id === size)) return;
+  }
+
   if (window.dobetterInventory) {
     await window.dobetterInventory.ready;
-    if (window.dobetterInventory.isSoldOut(productId)) return;
-    const left = window.dobetterInventory.getRemaining(productId);
-    if (left !== null && quantity > left) return;
+    if (productRequiresSize(product)) {
+      if (window.dobetterInventory.isSizeSoldOut(productId, size)) return;
+    } else if (window.dobetterInventory.isSoldOut(productId)) return;
+    const cap = maxQuantityFor(productId, size);
+    if (quantity > cap) return;
   }
+
   const items = readCart();
-  const existing = items.find((row) => row.id === productId);
-  if (existing) existing.quantity = Math.min(99, existing.quantity + quantity);
-  else items.push({ id: productId, quantity });
+  const existing = items.find((row) => row.id === productId && (row.size || "") === (size || ""));
+  const cap = maxQuantityFor(productId, size);
+  if (existing) {
+    existing.quantity = Math.min(cap || 99, Math.min(99, existing.quantity + quantity));
+  } else {
+    items.push({ id: productId, size: size || undefined, quantity: Math.min(cap || 99, quantity) });
+  }
   writeCart(items);
   renderCart();
   setCartOpen(true);
 }
 
-function updateCart(productId, action) {
+function findLineIndex(items, lineKey) {
+  return items.findIndex((row) => cartRowKey(row.id, row.size || "") === lineKey);
+}
+
+function updateCart(lineKey, action) {
   let items = readCart();
-  const index = items.findIndex((row) => row.id === productId);
+  const index = findLineIndex(items, lineKey);
   if (index === -1) return;
+
+  const row = items[index];
 
   if (action === "remove") {
     items.splice(index, 1);
   } else if (action === "inc") {
-    items[index].quantity = Math.min(99, items[index].quantity + 1);
+    const cap = maxQuantityFor(row.id, row.size || "");
+    if (cap <= 0) return;
+    items[index].quantity = Math.min(cap, Math.min(99, items[index].quantity + 1));
   } else if (action === "dec") {
     items[index].quantity -= 1;
     if (items[index].quantity <= 0) items.splice(index, 1);
@@ -172,7 +226,13 @@ async function startCheckout() {
   }
 
   try {
-    await checkoutWithItems(items.map((row) => ({ id: row.id, quantity: row.quantity })));
+    await checkoutWithItems(
+      items.map((row) => ({
+        id: row.id,
+        quantity: row.quantity,
+        ...(row.size ? { size: row.size } : {}),
+      }))
+    );
   } catch (err) {
     if (errEl) errEl.textContent = err instanceof Error ? err.message : "Checkout failed.";
     if (btn) {
@@ -194,6 +254,13 @@ async function loadCatalog() {
   }
 }
 
+function getSelectedProductSize() {
+  const fieldset = document.getElementById("product-size");
+  if (!fieldset) return "";
+  const checked = fieldset.querySelector('input[name="size"]:checked');
+  return checked instanceof HTMLInputElement ? checked.value : "";
+}
+
 function bindCartUi() {
   document.querySelector(".cart-toggle")?.addEventListener("click", () => {
     const expanded = document.querySelector(".cart-toggle")?.getAttribute("aria-expanded") === "true";
@@ -211,15 +278,26 @@ function bindCartUi() {
     const target = event.target;
     if (!(target instanceof HTMLElement)) return;
 
-    if (target.classList.contains("add-to-cart")) {
-      const id = target.getAttribute("data-product-id");
+    if (target.classList.contains("add-to-cart") || target.closest(".add-to-cart")) {
+      const btn = target.classList.contains("add-to-cart") ? target : target.closest(".add-to-cart");
+      const id = btn?.getAttribute("data-product-id");
       const qtyEl = document.getElementById("product-qty");
       let quantity = 1;
       if (qtyEl) {
         const parsed = parseInt(qtyEl.value, 10);
         if (Number.isFinite(parsed)) quantity = Math.min(99, Math.max(1, parsed));
       }
-      if (id) addToCart(id, quantity);
+      const size = getSelectedProductSize();
+      const product = id ? catalog.get(id) : null;
+      if (productRequiresSize(product) && !size) {
+        const errEl = document.getElementById("product-error");
+        if (errEl) {
+          errEl.hidden = false;
+          errEl.textContent = "Choose a size before adding to cart.";
+        }
+        return;
+      }
+      if (id) addToCart(id, quantity, size);
       return;
     }
 
@@ -229,9 +307,9 @@ function bindCartUi() {
 
     const actionEl = target.closest("[data-cart-action]");
     if (!actionEl) return;
-    const id = actionEl.getAttribute("data-product-id");
+    const lineKey = actionEl.getAttribute("data-line-key");
     const action = actionEl.getAttribute("data-cart-action");
-    if (id && action) updateCart(id, action);
+    if (lineKey && action) updateCart(lineKey, action);
   });
 
   document.querySelector("[data-cart-checkout]")?.addEventListener("click", startCheckout);
@@ -248,4 +326,6 @@ window.dobetterCart = {
   getProduct: (id) => catalog.get(id),
   addToCart,
   checkoutWithItems,
+  getSelectedProductSize,
+  productRequiresSize,
 };

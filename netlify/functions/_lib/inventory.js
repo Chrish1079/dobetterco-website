@@ -6,14 +6,63 @@ const priceToProductId = new Map(
   products.filter((p) => p.stripePriceId).map((p) => [p.stripePriceId, p.id])
 );
 
-function isTracked(product) {
-  return product && typeof product.stock === "number" && product.stock >= 0;
+const SIZE_SEP = "::";
+
+function productSizes(product) {
+  if (!product || !Array.isArray(product.sizes) || product.sizes.length === 0) return null;
+  return product.sizes;
+}
+
+function inventoryKey(productId, sizeId) {
+  if (!sizeId) return productId;
+  return `${productId}${SIZE_SEP}${sizeId}`;
+}
+
+function parseInventoryKey(key) {
+  const idx = key.indexOf(SIZE_SEP);
+  if (idx === -1) return { productId: key, sizeId: "" };
+  return { productId: key.slice(0, idx), sizeId: key.slice(idx + SIZE_SEP.length) };
+}
+
+function sizeCatalogStock(product) {
+  const sizes = productSizes(product);
+  if (!sizes) {
+    if (typeof product.stock === "number" && product.stock >= 0) {
+      return { [product.id]: product.stock };
+    }
+    return { [product.id]: null };
+  }
+
+  const out = {};
+  for (const row of sizes) {
+    const tracked = typeof row.stock === "number" && row.stock >= 0;
+    out[inventoryKey(product.id, row.id)] = tracked ? row.stock : null;
+  }
+  return out;
+}
+
+function isTrackedKey(product, sizeId) {
+  const sizes = productSizes(product);
+  if (!sizes) {
+    return typeof product.stock === "number" && product.stock >= 0;
+  }
+  const row = sizes.find((s) => s.id === sizeId);
+  return row && typeof row.stock === "number" && row.stock >= 0;
+}
+
+function catalogFallbackForKey(product, sizeId) {
+  const sizes = productSizes(product);
+  if (!sizes) {
+    return typeof product.stock === "number" ? product.stock : 0;
+  }
+  const row = sizes.find((s) => s.id === sizeId);
+  return row && typeof row.stock === "number" ? row.stock : 0;
 }
 
 function catalogStock() {
   const out = {};
   for (const product of products) {
-    out[product.id] = isTracked(product) ? product.stock : null;
+    Object.assign(out, sizeCatalogStock(product));
   }
   return out;
 }
@@ -32,8 +81,8 @@ function getStoreInstance() {
   return getStore({ name: "product-inventory", consistency: "strong" });
 }
 
-async function readRemaining(store, productId, fallback) {
-  const row = await store.get(productId, { type: "json" });
+async function readRemaining(store, stockKey, fallback) {
+  const row = await store.get(stockKey, { type: "json" });
   if (row && typeof row.remaining === "number") return Math.max(0, row.remaining);
   return Math.max(0, fallback);
 }
@@ -51,15 +100,34 @@ async function getPublicStock() {
   try {
     const out = {};
     for (const product of products) {
-      if (!isTracked(product)) {
-        out[product.id] = null;
+      const sizes = productSizes(product);
+      if (!sizes) {
+        const tracked = typeof product.stock === "number" && product.stock >= 0;
+        if (!tracked) {
+          out[product.id] = null;
+          continue;
+        }
+        const remaining = await readRemaining(store, product.id, product.stock);
+        if (!(await store.get(product.id))) {
+          await store.setJSON(product.id, { remaining });
+        }
+        out[product.id] = remaining;
         continue;
       }
-      const remaining = await readRemaining(store, product.id, product.stock);
-      if (!(await store.get(product.id))) {
-        await store.setJSON(product.id, { remaining });
+
+      for (const sizeRow of sizes) {
+        const key = inventoryKey(product.id, sizeRow.id);
+        const tracked = typeof sizeRow.stock === "number" && sizeRow.stock >= 0;
+        if (!tracked) {
+          out[key] = null;
+          continue;
+        }
+        const remaining = await readRemaining(store, key, sizeRow.stock);
+        if (!(await store.get(key))) {
+          await store.setJSON(key, { remaining });
+        }
+        out[key] = remaining;
       }
-      out[product.id] = remaining;
     }
     return out;
   } catch (err) {
@@ -68,19 +136,51 @@ async function getPublicStock() {
   }
 }
 
+function normalizeCartItem(item) {
+  const id = typeof item.id === "string" ? item.id : "";
+  const size = typeof item.size === "string" ? item.size.trim() : "";
+  const quantity = Number(item.quantity);
+  return { id, size, quantity };
+}
+
+function resolveItemStockKey(product, size) {
+  const sizes = productSizes(product);
+  if (!sizes) return product.id;
+  if (!size) return null;
+  if (!sizes.some((s) => s.id === size)) return null;
+  return inventoryKey(product.id, size);
+}
+
+function sizeLabel(product, sizeId) {
+  const sizes = productSizes(product);
+  if (!sizes) return "";
+  const row = sizes.find((s) => s.id === sizeId);
+  return row ? row.label || row.id : sizeId;
+}
+
 async function validateCartItems(items) {
   const stock = await getPublicStock();
   const problems = [];
 
-  for (const item of items) {
+  for (const raw of items) {
+    const item = normalizeCartItem(raw);
     const product = productById.get(item.id);
     if (!product) continue;
-    const cap = stock[item.id];
+
+    const stockKey = resolveItemStockKey(product, item.size);
+    if (stockKey === null) {
+      problems.push(`Choose a size for ${product.name}.`);
+      continue;
+    }
+
+    const cap = stock[stockKey];
     if (cap === null) continue;
     if (cap <= 0) {
-      problems.push(`${product.name} is sold out.`);
+      const label = item.size ? `${product.name} (${sizeLabel(product, item.size)})` : product.name;
+      problems.push(`${label} is sold out.`);
     } else if (item.quantity > cap) {
-      problems.push(`Only ${cap} left for ${product.name}.`);
+      const label = item.size ? `${product.name} (${sizeLabel(product, item.size)})` : product.name;
+      problems.push(`Only ${cap} left for ${label}.`);
     }
   }
 
@@ -101,12 +201,16 @@ async function decrementForOrder(decrements) {
   }
 
   try {
-    for (const [productId, quantity] of Object.entries(decrements)) {
-      const product = productById.get(productId);
-      if (!product || !isTracked(product) || quantity < 1) continue;
+    for (const [stockKey, quantity] of Object.entries(decrements)) {
+      if (quantity < 1) continue;
 
-      const remaining = await readRemaining(store, productId, product.stock);
-      await store.setJSON(productId, { remaining: Math.max(0, remaining - quantity) });
+      const { productId, sizeId } = parseInventoryKey(stockKey);
+      const product = productById.get(productId);
+      if (!product || !isTrackedKey(product, sizeId)) continue;
+
+      const fallback = catalogFallbackForKey(product, sizeId);
+      const remaining = await readRemaining(store, stockKey, fallback);
+      await store.setJSON(stockKey, { remaining: Math.max(0, remaining - quantity) });
     }
   } catch (err) {
     console.error("Blobs decrement failed:", err.message);
@@ -122,5 +226,9 @@ module.exports = {
   validateCartItems,
   decrementForOrder,
   productIdFromStripePrice,
+  inventoryKey,
+  resolveItemStockKey,
+  normalizeCartItem,
+  productSizes,
   products,
 };

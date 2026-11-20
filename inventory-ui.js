@@ -1,8 +1,23 @@
 const INVENTORY_ENDPOINT = "/.netlify/functions/inventory";
+const SIZE_SEP = "::";
 
 /** @type {Record<string, number | null>} */
 let stockLevels = {};
+let catalogProducts = [];
 let inventoryReady = loadInventory();
+
+function stockKey(productId, sizeId) {
+  if (!sizeId) return productId;
+  return `${productId}${SIZE_SEP}${sizeId}`;
+}
+
+function getProductFromCatalog(productId) {
+  return catalogProducts.find((p) => p.id === productId);
+}
+
+function productHasSizes(product) {
+  return product && Array.isArray(product.sizes) && product.sizes.length > 0;
+}
 
 function applyLocalInventoryDemo() {
   const host = window.location.hostname;
@@ -13,10 +28,25 @@ function applyLocalInventoryDemo() {
   if (!demo) return false;
 
   for (const pair of demo.split(",")) {
-    const [id, raw] = pair.split(":").map((s) => s.trim());
-    if (!id || raw === undefined) continue;
-    const value = parseInt(raw, 10);
-    stockLevels[id] = Number.isFinite(value) ? value : null;
+    const parts = pair.split(":").map((s) => s.trim());
+    if (!parts[0]) continue;
+
+    if (parts.length >= 3) {
+      const [id, size, raw] = parts;
+      const value = parseInt(raw, 10);
+      stockLevels[stockKey(id, size)] = Number.isFinite(value) ? value : null;
+    } else if (parts.length === 2) {
+      const [id, raw] = parts;
+      const value = parseInt(raw, 10);
+      const product = getProductFromCatalog(id);
+      if (productHasSizes(product)) {
+        for (const row of product.sizes) {
+          stockLevels[stockKey(id, row.id)] = Number.isFinite(value) ? value : null;
+        }
+      } else {
+        stockLevels[id] = Number.isFinite(value) ? value : null;
+      }
+    }
   }
 
   applySoldOutUi();
@@ -30,8 +60,18 @@ async function loadInventoryFromCatalog() {
     if (!response.ok) return;
     const products = await response.json();
     if (!Array.isArray(products)) return;
+    catalogProducts = products;
     for (const product of products) {
-      stockLevels[product.id] = typeof product.stock === "number" ? product.stock : null;
+      if (productHasSizes(product)) {
+        for (const row of product.sizes) {
+          const tracked = typeof row.stock === "number";
+          stockLevels[stockKey(product.id, row.id)] = tracked ? row.stock : null;
+        }
+      } else if (typeof product.stock === "number") {
+        stockLevels[product.id] = product.stock;
+      } else {
+        stockLevels[product.id] = null;
+      }
     }
   } catch {
     /* ignore */
@@ -39,6 +79,16 @@ async function loadInventoryFromCatalog() {
 }
 
 async function loadInventory() {
+  try {
+    const response = await fetch("/data/products.json", { cache: "no-store" });
+    if (response.ok) {
+      const list = await response.json();
+      if (Array.isArray(list)) catalogProducts = list;
+    }
+  } catch {
+    /* ignore */
+  }
+
   try {
     const response = await fetch(INVENTORY_ENDPOINT, { cache: "no-store" });
     if (response.ok) {
@@ -56,12 +106,46 @@ async function loadInventory() {
   document.dispatchEvent(new CustomEvent("inventory:updated"));
 }
 
-function getRemaining(productId) {
-  if (!(productId in stockLevels)) return null;
-  return stockLevels[productId];
+function getRemainingForKey(key) {
+  if (!(key in stockLevels)) return null;
+  return stockLevels[key];
+}
+
+function getRemaining(productId, sizeId) {
+  const product = getProductFromCatalog(productId);
+  if (productHasSizes(product)) {
+    if (sizeId) return getRemainingForKey(stockKey(productId, sizeId));
+    let tracked = false;
+    let total = 0;
+    for (const row of product.sizes) {
+      const left = getRemainingForKey(stockKey(productId, row.id));
+      if (left === null) return null;
+      tracked = true;
+      total += left;
+    }
+    return tracked ? total : null;
+  }
+  return getRemainingForKey(productId);
+}
+
+function isSizeSoldOut(productId, sizeId) {
+  const left = getRemaining(productId, sizeId);
+  return left !== null && left <= 0;
 }
 
 function isSoldOut(productId) {
+  const product = getProductFromCatalog(productId);
+  if (productHasSizes(product)) {
+    let anyTracked = false;
+    let anyAvailable = false;
+    for (const row of product.sizes) {
+      const left = getRemaining(productId, row.id);
+      if (left === null) return false;
+      anyTracked = true;
+      if (left > 0) anyAvailable = true;
+    }
+    return anyTracked && !anyAvailable;
+  }
   const left = getRemaining(productId);
   return left !== null && left <= 0;
 }
@@ -72,8 +156,7 @@ function applySoldOutUi() {
     if (!id) return;
 
     const li = card.closest(".product");
-    const left = getRemaining(id);
-    if (left === null) return;
+    const soldOut = isSoldOut(id);
 
     const imgWrap = card.querySelector(".product__img");
     if (!imgWrap) return;
@@ -85,7 +168,7 @@ function applySoldOutUi() {
       imgWrap.appendChild(badge);
     }
 
-    if (left <= 0) {
+    if (soldOut) {
       li?.classList.add("product--sold-out");
       badge.textContent = "Sold out";
       badge.classList.add("product__badge--sold-out");
@@ -110,5 +193,8 @@ window.dobetterInventory = {
   ready: inventoryReady,
   getRemaining,
   isSoldOut,
+  isSizeSoldOut,
+  getProductFromCatalog,
+  productHasSizes,
   refresh: loadInventory,
 };
