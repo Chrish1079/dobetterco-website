@@ -6,11 +6,11 @@
     "image": "images/products/tee-olive-statement.png",
     "stripePriceId": "price_1UYhlgAErqXe9fCb3rwYJK4F",
     "sizes": [
-      { "id": "S", "label": "S", "stock": 10 },
-      { "id": "M", "label": "M", "stock": 10 },
-      { "id": "L", "label": "L", "stock": 10 },
-      { "id": "XL", "label": "XL", "stock": 10 },
-      { "id": "XXL", "label": "XXL", "stock": 10 }
+      { "id": "S", "label": "S", "stock": 1 },
+      { "id": "M", "label": "M", "stock": 2 },
+      { "id": "L", "label": "L", "stock": 2 },
+      { "id": "XL", "label": "XL", "stock": 1 },
+      { "id": "XXL", "label": "XXL", "stock": 0 }
     ]
   },
   {
@@ -20,11 +20,11 @@
     "image": "images/products/tee-black-statement.png",
     "stripePriceId": "price_1UYhlkAErqXe9fCb294Xkzyd",
     "sizes": [
-      { "id": "S", "label": "S", "stock": 10 },
-      { "id": "M", "label": "M", "stock": 10 },
-      { "id": "L", "label": "L", "stock": 10 },
-      { "id": "XL", "label": "XL", "stock": 10 },
-      { "id": "XXL", "label": "XXL", "stock": 10 }
+      { "id": "S", "label": "S", "stock": 1 },
+      { "id": "M", "label": "M", "stock": 2 },
+      { "id": "L", "label": "L", "stock": 2 },
+      { "id": "XL", "label": "XL", "stock": 1 },
+      { "id": "XXL", "label": "XXL", "stock": 0 }
     ]
   },
   {
@@ -34,11 +34,11 @@
     "image": "images/products/tee-navy-crest.png",
     "stripePriceId": "price_1UYhlkAErqXe9fCb8owV5QD7",
     "sizes": [
-      { "id": "S", "label": "S", "stock": 10 },
-      { "id": "M", "label": "M", "stock": 10 },
-      { "id": "L", "label": "L", "stock": 10 },
-      { "id": "XL", "label": "XL", "stock": 10 },
-      { "id": "XXL", "label": "XXL", "stock": 10 }
+      { "id": "S", "label": "S", "stock": 1 },
+      { "id": "M", "label": "M", "stock": 1 },
+      { "id": "L", "label": "L", "stock": 1 },
+      { "id": "XL", "label": "XL", "stock": 1 },
+      { "id": "XXL", "label": "XXL", "stock": 0 }
     ]
   },
   {
@@ -48,11 +48,11 @@
     "image": "images/products/tee-black-crest.png",
     "stripePriceId": "price_1UYhllAErqXe9fCbhMD2vBEe",
     "sizes": [
-      { "id": "S", "label": "S", "stock": 10 },
-      { "id": "M", "label": "M", "stock": 10 },
-      { "id": "L", "label": "L", "stock": 10 },
-      { "id": "XL", "label": "XL", "stock": 10 },
-      { "id": "XXL", "label": "XXL", "stock": 10 }
+      { "id": "S", "label": "S", "stock": 0 },
+      { "id": "M", "label": "M", "stock": 1 },
+      { "id": "L", "label": "L", "stock": 1 },
+      { "id": "XL", "label": "XL", "stock": 1 },
+      { "id": "XXL", "label": "XXL", "stock": 0 }
     ]
   },
   {
@@ -62,11 +62,11 @@
     "image": "images/products/tee-forest-crest.jpg",
     "stripePriceId": "price_1UYhllAErqXe9fCbAKTpxr83",
     "sizes": [
-      { "id": "S", "label": "S", "stock": 10 },
-      { "id": "M", "label": "M", "stock": 10 },
-      { "id": "L", "label": "L", "stock": 10 },
-      { "id": "XL", "label": "XL", "stock": 10 },
-      { "id": "XXL", "label": "XXL", "stock": 10 }
+      { "id": "S", "label": "S", "stock": 0 },
+      { "id": "M", "label": "M", "stock": 2 },
+      { "id": "L", "label": "L", "stock": 1 },
+      { "id": "XL", "label": "XL", "stock": 2 },
+      { "id": "XXL", "label": "XXL", "stock": 0 }
     ]
   },
   {
@@ -75,7 +75,7 @@
     "priceCents": 3500,
     "image": "images/products/hat-heather-patch.png",
     "stripePriceId": "price_1UYhllAErqXe9fCboVWmcC7X",
-    "sizes": [{ "id": "OS", "label": "One size", "stock": 50 }]
+    "sizes": [{ "id": "OS", "label": "One size", "stock": 2 }]
   },
   {
     "id": "hat-olive-patch",
@@ -83,7 +83,7 @@
     "priceCents": 3500,
     "image": "images/products/hat-olive-patch.png",
     "stripePriceId": "price_1UYhlnAErqXe9fCbZLMoDPHZ",
-    "sizes": [{ "id": "OS", "label": "One size", "stock": 50 }]
+    "sizes": [{ "id": "OS", "label": "One size", "stock": 3 }]
   },
   {
     "id": "hat-black-patch",
@@ -91,7 +91,7 @@
     "priceCents": 3500,
     "image": "images/products/hat-black-patch.png",
     "stripePriceId": "price_1UYhlyAErqXe9fCbGvGyv8u9",
-    "sizes": [{ "id": "OS", "label": "One size", "stock": 50 }]
+    "sizes": [{ "id": "OS", "label": "One size", "stock": 5 }]
   },
   {
     "id": "hat-navy-patch",
@@ -99,6 +99,6 @@
     "priceCents": 3500,
     "image": "images/products/hat-navy-patch.jpg",
     "stripePriceId": "price_1UYhlyAErqXe9fCbKgIbFWvq",
-    "sizes": [{ "id": "OS", "label": "One size", "stock": 50 }]
+    "sizes": [{ "id": "OS", "label": "One size", "stock": 2 }]
   }
 ]

@@ -221,10 +221,37 @@ function productIdFromStripePrice(priceId) {
   return priceId ? priceToProductId.get(priceId) : undefined;
 }
 
+/** Overwrite blob counts from data/products.json (admin reset). */
+async function resetInventoryFromCatalog() {
+  const store = getStoreInstance();
+  const out = {};
+
+  for (const product of products) {
+    const sizes = productSizes(product);
+    if (!sizes) {
+      const tracked = typeof product.stock === "number" && product.stock >= 0;
+      if (!tracked) continue;
+      await store.setJSON(product.id, { remaining: product.stock });
+      out[product.id] = product.stock;
+      continue;
+    }
+
+    for (const sizeRow of sizes) {
+      if (typeof sizeRow.stock !== "number" || sizeRow.stock < 0) continue;
+      const key = inventoryKey(product.id, sizeRow.id);
+      await store.setJSON(key, { remaining: sizeRow.stock });
+      out[key] = sizeRow.stock;
+    }
+  }
+
+  return out;
+}
+
 module.exports = {
   getPublicStock,
   validateCartItems,
   decrementForOrder,
+  resetInventoryFromCatalog,
   productIdFromStripePrice,
   inventoryKey,
   resolveItemStockKey,
