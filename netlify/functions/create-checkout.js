@@ -1,6 +1,6 @@
 const Stripe = require("stripe");
 const products = require("../../data/products.json");
-const { validateCartItems, normalizeCartItem, productSizes } = require("./_lib/inventory");
+const { connectBlobs, validateCartItems, normalizeCartItem, productSizes } = require("./_lib/inventory");
 
 function getStripe() {
   const key = process.env.STRIPE_SECRET_KEY;
@@ -92,6 +92,7 @@ exports.handler = async (event) => {
   }
 
   try {
+    connectBlobs(event);
     await validateCartItems(normalized);
   } catch (err) {
     const status = err.statusCode || 409;

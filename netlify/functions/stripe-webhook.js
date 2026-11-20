@@ -1,5 +1,5 @@
 const Stripe = require("stripe");
-const { decrementForOrder, productIdFromStripePrice, inventoryKey } = require("./_lib/inventory");
+const { connectBlobs, decrementForOrder, productIdFromStripePrice, inventoryKey } = require("./_lib/inventory");
 
 function getStripe() {
   const key = process.env.STRIPE_SECRET_KEY;
@@ -75,6 +75,7 @@ exports.handler = async (event) => {
       }
     }
 
+    connectBlobs(event);
     await decrementForOrder(decrements);
     return { statusCode: 200, body: JSON.stringify({ received: true }) };
   } catch (err) {

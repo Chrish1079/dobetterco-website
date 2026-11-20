@@ -1,4 +1,4 @@
-const { getPublicStock } = require("./_lib/inventory");
+const { connectBlobs, getPublicStock } = require("./_lib/inventory");
 
 const cors = {
   "Access-Control-Allow-Origin": "*",
@@ -16,6 +16,7 @@ exports.handler = async (event) => {
   }
 
   try {
+    connectBlobs(event);
     const stock = await getPublicStock();
     return {
       statusCode: 200,

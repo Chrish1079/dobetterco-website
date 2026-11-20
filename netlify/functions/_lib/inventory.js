@@ -1,4 +1,4 @@
-const { getStore } = require("@netlify/blobs");
+const { connectLambda, getStore } = require("@netlify/blobs");
 const products = require("../../../data/products.json");
 
 const productById = new Map(products.map((p) => [p.id, p]));
@@ -67,6 +67,10 @@ function catalogStock() {
   return out;
 }
 
+function connectBlobs(event) {
+  if (event) connectLambda(event);
+}
+
 function getStoreInstance() {
   const siteID = process.env.SITE_ID || process.env.NETLIFY_SITE_ID;
   const token = process.env.NETLIFY_AUTH_TOKEN;
@@ -78,7 +82,7 @@ function getStoreInstance() {
       consistency: "strong",
     });
   }
-  return getStore({ name: "product-inventory", consistency: "strong" });
+  return getStore("product-inventory");
 }
 
 async function readRemaining(store, stockKey, fallback) {
@@ -248,6 +252,7 @@ async function resetInventoryFromCatalog() {
 }
 
 module.exports = {
+  connectBlobs,
   getPublicStock,
   validateCartItems,
   decrementForOrder,

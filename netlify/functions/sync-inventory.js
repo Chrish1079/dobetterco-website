@@ -1,4 +1,4 @@
-const { resetInventoryFromCatalog } = require("./_lib/inventory");
+const { connectBlobs, resetInventoryFromCatalog } = require("./_lib/inventory");
 
 const cors = {
   "Access-Control-Allow-Origin": "*",
@@ -26,6 +26,7 @@ exports.handler = async (event) => {
   }
 
   try {
+    connectBlobs(event);
     const stock = await resetInventoryFromCatalog();
     return json(200, { ok: true, stock });
   } catch (err) {
