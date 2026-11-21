@@ -5,13 +5,7 @@ function getProductIdFromUrl() {
 }
 
 function getProductQuantity() {
-  const qtyEl = document.getElementById("product-qty");
-  if (!qtyEl) return 1;
-  const parsed = parseInt(qtyEl.value, 10);
-  if (!Number.isFinite(parsed)) return 1;
-  const max = parseInt(qtyEl.max, 10);
-  const cap = Number.isFinite(max) ? max : 99;
-  return Math.min(cap, Math.max(1, parsed));
+  return window.dobetterCart?.readProductPageQuantity?.() ?? 1;
 }
 
 function getSelectedSize() {
@@ -271,6 +265,15 @@ async function initProductPage() {
     }
 
     const quantity = getProductQuantity();
+    const stockLeft = size ? window.dobetterInventory?.getRemaining(product.id, size) : null;
+    if (stockLeft !== null && stockLeft > 0 && quantity > stockLeft) {
+      if (errorEl) {
+        errorEl.hidden = false;
+        errorEl.textContent = `Only ${stockLeft} available in that size.`;
+      }
+      return;
+    }
+
     buyNowBtn.disabled = true;
     const original = buyNowBtn.textContent;
     buyNowBtn.textContent = "Redirecting…";

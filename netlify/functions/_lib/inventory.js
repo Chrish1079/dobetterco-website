@@ -143,7 +143,7 @@ async function getPublicStock() {
 function normalizeCartItem(item) {
   const id = typeof item.id === "string" ? item.id : "";
   const size = typeof item.size === "string" ? item.size.trim() : "";
-  const quantity = Number(item.quantity);
+  const quantity = Math.min(99, Math.max(1, Math.trunc(Number(item.quantity))));
   return { id, size, quantity };
 }
 

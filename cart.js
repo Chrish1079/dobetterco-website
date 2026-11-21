@@ -261,6 +261,21 @@ function getSelectedProductSize() {
   return checked instanceof HTMLInputElement ? checked.value : "";
 }
 
+/** Same quantity logic for Add to cart and Buy now — uses the field value, not HTML max. */
+function readProductPageQuantity() {
+  const qtyEl = document.getElementById("product-qty");
+  if (!qtyEl) return 1;
+  const parsed = qtyEl.valueAsNumber;
+  if (Number.isFinite(parsed)) {
+    return Math.min(99, Math.max(1, Math.trunc(parsed)));
+  }
+  const fromValue = parseInt(qtyEl.value, 10);
+  if (Number.isFinite(fromValue)) {
+    return Math.min(99, Math.max(1, fromValue));
+  }
+  return 1;
+}
+
 function bindCartUi() {
   document.querySelector(".cart-toggle")?.addEventListener("click", () => {
     const expanded = document.querySelector(".cart-toggle")?.getAttribute("aria-expanded") === "true";
@@ -281,12 +296,7 @@ function bindCartUi() {
     if (target.classList.contains("add-to-cart") || target.closest(".add-to-cart")) {
       const btn = target.classList.contains("add-to-cart") ? target : target.closest(".add-to-cart");
       const id = btn?.getAttribute("data-product-id");
-      const qtyEl = document.getElementById("product-qty");
-      let quantity = 1;
-      if (qtyEl) {
-        const parsed = parseInt(qtyEl.value, 10);
-        if (Number.isFinite(parsed)) quantity = Math.min(99, Math.max(1, parsed));
-      }
+      const quantity = readProductPageQuantity();
       const size = getSelectedProductSize();
       const product = id ? catalog.get(id) : null;
       if (productRequiresSize(product) && !size) {
@@ -327,5 +337,6 @@ window.dobetterCart = {
   addToCart,
   checkoutWithItems,
   getSelectedProductSize,
+  readProductPageQuantity,
   productRequiresSize,
 };
